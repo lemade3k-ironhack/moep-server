@@ -12,6 +12,9 @@ const express = require("express");
 
 const app = express();
 
+// ℹ️ This function is getting exported from the config folder. It runs most middlewares
+require("./config")(app);
+
 //Session Handling:
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -30,9 +33,6 @@ app.use(
       }),
    })
 );
-
-// ℹ️ This function is getting exported from the config folder. It runs most middlewares
-require("./config")(app);
 
 // 👇 Start handling routes here
 // Contrary to the views version, all routes are controled from the routes/index.js
