@@ -42,28 +42,39 @@ a festival-app to overview the timetable, store favourites and get festival info
 User model
 
 ```
-username - String // required &unique
+username - String // required & unique
 email - String // required & unique
 password - String // required
-favorites - [Ref ObjectID<Concert>]
+role - String // enum['admin', 'user'], default: 'user'
+concerts - [Ref ObjectID<Concert>]
+timestamps
 ```
 
 Concert model
 
 ```
-band - String // required
+band - String // required & unique
 starttime - Date // required
 endtime - Date // required
 day - Date // required
 description - String
 image - String
 stage - [Ref ObjectID<Stage>]
+timestamps
 ```
 
 Stage model
 
 ```
-name - String //required
+name - String //required & unique
+timestamps
+```
+
+News model
+
+```
+message - String //required
+timestamps
 ```
 
 ## API Endpoints/Backend Routes
