@@ -4,7 +4,7 @@ const concertSchema = new Schema(
    {
       bandname: {
          type: String,
-         required: true,
+         require: true,
          unique: true,
       },
       day: {
