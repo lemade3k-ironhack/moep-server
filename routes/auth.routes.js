@@ -73,7 +73,7 @@ router.post("/signin", (req, res) => {
    // -----SERVER SIDE VALIDATION ----------
    if (!name || !password) {
       res.status(500).json({
-         error: "Please enter Username and password",
+         errorMessage: "Please enter Username and password",
       });
       return;
    }
@@ -91,14 +91,14 @@ router.post("/signin", (req, res) => {
                //if passwords do not match
                else {
                   res.status(500).json({
-                     error: "Password or Username incorrect",
+                     errorMessage: "Password or Username incorrect",
                   });
                   return;
                }
             })
             .catch(() => {
                res.status(500).json({
-                  error: "Something went wrong",
+                  errorMessage: "Something went wrong",
                });
                return;
             });
@@ -106,7 +106,7 @@ router.post("/signin", (req, res) => {
       //throw an error if the user does not exists
       .catch((err) => {
          res.status(500).json({
-            error: "Password or Username incorrect",
+            errorMessage: "Password or Username incorrect",
             message: err,
          });
          return;
