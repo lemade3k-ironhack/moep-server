@@ -68,30 +68,28 @@ name - String //required
 
 ## API Endpoints/Backend Routes
 
-POST /auth/signup
-POST /auth/signin  
- POST /auth/logout
-GET /auth/user
+-  POST /auth/signup
+-  POST /auth/signin
+-  POST /auth/logout
+-  GET /auth/user
 
-GET /favorites
-get a users favorites
-PATCH /favorites/add
-add a users favorite
-PATCH /favorites/remove  
-remove a users favorite
+-  PATCH /favorites/add
+-  add a users favorite
+-  PATCH /favorites/remove
+-  remove a users favorite
 
-GET /stages get all stages
-POST /stages/create create new stage
-GET /stages/:stageId get stage details
-PATCH /stages/:stageId/update edit stage
-DELETE /stages/:stageId/delete delete stage
+-  GET /stages get all stages
+-  POST /stages/create create new stage
+-  GET /stages/:stageId get stage details
+-  PATCH /stages/:stageId/update edit stage
+-  DELETE /stages/:stageId/delete delete stage
 
-GET /stages/:stageId/concerts get all concerts of a stage
-POST /stages/:stageId/concerts/create create new concert
-GET /stages/:stageId/concerts/:concertId get concert details
-PATCH /stages/:stageId/concerts/:concertId/update edit concert
-DELETE /stages/:stageId/concerts/:concertId/delete delete concert
-GET /concerts get all concerts
+-  GET /stages/:stageId/concerts get all concerts of a stage
+-  POST /stages/:stageId/concerts/create create new concert
+-  GET /stages/:stageId/concerts/:concertId get concert details
+-  PATCH /stages/:stageId/concerts/:concertId/update edit concert
+-  DELETE /stages/:stageId/concerts/:concertId/delete delete concert
+-  GET /concerts get all concerts
 
 ## Links
 
