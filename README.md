@@ -97,7 +97,7 @@ timestamps
 
 -  GET /stages/:stageId/concerts get all concerts of a stage
 -  POST /stages/:stageId/concerts/create create new concert
--  GET /stages/:stageId/concerts/:concertId get concert details
+-  GET /concerts/:concertId get concert details
 -  PATCH /stages/:stageId/concerts/:concertId/update edit concert
 -  DELETE /stages/:stageId/concerts/:concertId/delete delete concert
 -  GET /concerts get all concerts
