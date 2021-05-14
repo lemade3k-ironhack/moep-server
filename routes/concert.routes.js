@@ -16,11 +16,12 @@ router.get("/concerts", (req, res) => {
       });
 });
 
-router.get("/concerts/:concertId", (req, res) => {
-   const { concertId } = reg.params;
-   Concert.findById(concertId)
-      .then((concert) => {
-         res.status(200).json(concert);
+router.get("/stages/:stageId/concerts", (req, res) => {
+   const { stageId } = req.params;
+   Stage.findById(stageId)
+      .populate("concerts")
+      .then((stage) => {
+         res.status(200).json(stage.concerts);
       })
       .catch((err) => {
          res.status(500).json({
@@ -29,11 +30,11 @@ router.get("/concerts/:concertId", (req, res) => {
       });
 });
 
-router.get("/stages/:stageId/concerts", (req, res) => {
-   const { stageId } = reg.params;
-   Stage.findById(stageId)
-      .then((stage) => {
-         res.status(200).json(stage.concerts);
+router.get("/concerts/:concertId", (req, res) => {
+   const { concertId } = req.params;
+   Concert.findById(concertId)
+      .then((concert) => {
+         res.status(200).json(concert);
       })
       .catch((err) => {
          res.status(500).json({
