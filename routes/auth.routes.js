@@ -15,15 +15,6 @@ router.post("/signup", (req, res) => {
       return;
    }
 
-   User.findOne({ name }).then((user) => {
-      if (user) {
-         res.status(500).json({
-            errorMessage: "Username already taken",
-         });
-         return;
-      }
-   });
-
    const myPassRegex = new RegExp(
       /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/
    );
@@ -59,7 +50,7 @@ router.post("/signup", (req, res) => {
             });
          } else {
             res.status(500).json({
-               errorMessage: "Something went wrong!",
+               errorMessage: "Couldn't create user! Please try again.",
                message: err,
             });
          }
