@@ -2,6 +2,20 @@ const express = require("express");
 const router = express.Router();
 const Stage = require("../models/Stage.model");
 
+// custom middleware to validate user input
+const isFilledIn = (req, res, next) => {
+  const { name } = req.body;
+
+  if (!name) {
+    res.status(500).json({
+      errorMessage: "Please enter all fields",
+    });
+    return;
+  } else {
+    next();
+  }
+};
+
 router.get("/stages", (req, res) => {
   Stage.find()
     .then((stages) => {
@@ -15,15 +29,8 @@ router.get("/stages", (req, res) => {
     });
 });
 
-router.post("/stage/create", (req, res) => {
+router.post("/stage/create", isFilledIn, (req, res) => {
   const { name } = req.body;
-
-  if (!name) {
-    res.status(500).json({
-      errorMessage: "Please enter all fields",
-    });
-    return;
-  }
 
   Stage.create({ name })
     .then((stage) => res.status(202).json(stage))
@@ -42,16 +49,9 @@ router.post("/stage/create", (req, res) => {
     });
 });
 
-router.patch("/stage/:stageId/update", (req, res) => {
+router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
   const stageId = req.params.stageId;
   const { name } = req.body;
-
-  if (!name) {
-    res.status(500).json({
-      errorMessage: "Please enter all fields",
-    });
-    return;
-  }
 
   Stage.findByIdAndUpdate(stageId, { $set: { name: name } }, { new: true })
     .then((stage) => res.status(200).json(stage))
