@@ -11,6 +11,7 @@ router.get("/concerts", (req, res) => {
       })
       .catch((err) => {
          res.status(500).json({
+            errorMessage: "Concerts not found",
             message: err,
          });
       });
@@ -25,6 +26,7 @@ router.get("/stages/:stageId/concerts", (req, res) => {
       })
       .catch((err) => {
          res.status(500).json({
+            errorMessage: "Concerts not found",
             message: err,
          });
       });
@@ -38,6 +40,7 @@ router.get("/concerts/:concertId", (req, res) => {
       })
       .catch((err) => {
          res.status(500).json({
+            errorMessage: "something went wrong with the concert",
             message: err,
          });
       });
