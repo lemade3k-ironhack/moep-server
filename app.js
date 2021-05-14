@@ -42,6 +42,9 @@ app.use("/api", allRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/api/auth", authRoutes);
 
+const concertRoutes = require("./routes/concert.routes");
+app.use("/api", concertRoutes);
+
 const stageRoutes = require("./routes/stages.routes");
 app.use("/api", stageRoutes);
 
