@@ -23,7 +23,7 @@ router.get("/stages", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Something went wrong! Please try again.",
+        errorMessage: "Something went wrong! Please try again.",
         message: err,
       });
     });
@@ -77,7 +77,7 @@ router.delete("/stage/:stageId/delete", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        error: "Couldn't delete stage! Please try again.",
+        errorMessage: "Couldn't delete stage! Please try again.",
         message: err,
       });
     });
