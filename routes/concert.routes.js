@@ -3,6 +3,25 @@ const router = express.Router();
 let Concert = require("../models/Concert.model");
 let Stage = require("../models/Stage.model");
 
+router.get("/upcoming", (req, res) => {
+  Concert.find()
+    .then((concerts) => {
+      sorted = concerts.sort((a, b) => {
+        a.starttime > b.starttime ? 1 : b.starttime > a.starttime ? -1 : 0;
+      });
+      upcoming = sorted
+        .filter((concert) => concert.starttime > new Date())
+        .slice(0, 5);
+      res.status(200).json(upcoming);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong. Please try again",
+        message: err,
+      });
+    });
+});
+
 router.get("/concerts", (req, res) => {
   Concert.find()
     .then((concerts) => {
