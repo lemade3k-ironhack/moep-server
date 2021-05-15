@@ -131,6 +131,24 @@ router.patch("/concerts/:concertId/update", isFilledIn, (req, res) => {
     });
 });
 
+// Delete Concert
+router.delete("/concerts/:concertId/delete", (req, res) => {
+  const { concertId } = req.params;
+
+  Concert.findByIdAndDelete(concertId)
+    .then((concert) => {
+      Stage.findByIdAndUpdate(concert.stage, {
+        $pull: { concerts: concertId },
+      }).then(() => res.status(200).json(concert));
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Couldn't delete concert! Please try again.",
+        message: err,
+      });
+    });
+});
+
 // Get concert details
 router.get("/concerts/:concertId", (req, res) => {
   const { concertId } = req.params;
