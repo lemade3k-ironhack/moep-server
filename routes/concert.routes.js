@@ -105,6 +105,32 @@ router.post("/stages/:stageId/concerts/create", isFilledIn, (req, res) => {
     });
 });
 
+// Update Concert
+router.patch("/concerts/:concertId/update", isFilledIn, (req, res) => {
+  const { concertId } = req.params;
+  const { bandname, day, starttime, endtime, description, image } = req.body;
+
+  Concert.findByIdAndUpdate(
+    concertId,
+    { bandname, day, starttime, endtime, description, image },
+    { new: true }
+  )
+    .then((concert) => res.status(200).json(concert))
+    .catch((err) => {
+      if (err.code === 11000) {
+        res.status(500).json({
+          errorMessage: "New bandname already taken",
+          message: err,
+        });
+      } else {
+        res.status(500).json({
+          errorMessage: "Couldn't update concert! Please try again.",
+          message: err,
+        });
+      }
+    });
+});
+
 // Get concert details
 router.get("/concerts/:concertId", (req, res) => {
   const { concertId } = req.params;
