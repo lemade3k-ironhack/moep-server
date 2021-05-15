@@ -79,28 +79,31 @@ timestamps
 
 ## API Endpoints/Backend Routes
 
--  POST /auth/signup
--  POST /auth/signin
--  POST /auth/logout
--  GET /auth/user
+##### Session handling
+-  POST /api/auth/signup
+-  POST /api/auth/signin
+-  POST /api/auth/logout
+-  GET /api/auth/user
 
--  PATCH /favorites/add
--  add a users favorite
--  PATCH /favorites/remove
--  remove a users favorite
+##### Stages routes
+-  GET /api/stages - get all stages
+-  POST /api/stage/create - create new stage
+-  GET /api/stage/:stageId - get stage details
+-  PATCH /api/stage/:stageId/update - edit stage
+-  DELETE /api/stage/:stageId/delete - delete stage
 
--  GET /stages get all stages
--  POST /stages/create create new stage
--  GET /stages/:stageId get stage details
--  PATCH /stages/:stageId/update edit stage
--  DELETE /stages/:stageId/delete delete stage
+##### Concert routes
+- GET /api/upcoming - get the next 5 upcoming shows
+-  GET /api/concerts - get all concerts
+-  GET /api/concerts/:concertId - get concert details
+-  GET /api/stages/:stageId/concerts - get all concerts of a stage
+-  POST /api/stages/:stageId/concerts/create - create new concert for a stage
+-  PATCH /api/concerts/:concertId/update - edit concert
+-  DELETE /api/concerts/:concertId/delete - delete concert
 
--  GET /stages/:stageId/concerts get all concerts of a stage
--  POST /stages/:stageId/concerts/create create new concert
--  GET /concerts/:concertId get concert details
--  PATCH /stages/:stageId/concerts/:concertId/update edit concert
--  DELETE /stages/:stageId/concerts/:concertId/delete delete concert
--  GET /concerts get all concerts
+##### Favorites
+-  PATCH /api/favorites/add - add a users favorite
+-  PATCH /api/favorites/remove - remove a users favorite
 
 ## Links
 
