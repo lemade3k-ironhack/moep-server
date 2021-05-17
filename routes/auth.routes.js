@@ -123,7 +123,24 @@ const isLoggedIn = (req, res, next) => {
 // THIS IS A PROTECTED ROUTE
 // will handle all get requests to http:localhost:5005/api/user
 router.get("/user", isLoggedIn, (req, res, next) => {
-  res.status(200).json(req.session.loggedInUser);
+  User.findById(req.session.loggedInUser._id)
+    .populate("concerts")
+    .then((user) => {
+      const filtered = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        concerts: user.concerts,
+      };
+
+      res.status(200).json(filtered);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong. Please try again",
+        message: err,
+      });
+    });
 });
 
 module.exports = router;
