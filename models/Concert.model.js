@@ -7,10 +7,6 @@ const concertSchema = new Schema(
          require: true,
          unique: true,
       },
-      day: {
-         type: Date,
-         require: true,
-      },
       starttime: {
          type: Date,
          require: true,

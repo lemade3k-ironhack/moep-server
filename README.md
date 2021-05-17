@@ -56,7 +56,6 @@ Concert model
 band - String // required & unique
 starttime - Date // required
 endtime - Date // required
-day - Date // required
 description - String
 image - String
 stage - [Ref ObjectID<Stage>]
