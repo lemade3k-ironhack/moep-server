@@ -20,18 +20,18 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
 app.use(
-   session({
-      secret: process.env.SESSION_SECRET,
-      saveUninitialized: false,
-      resave: false,
-      cookie: {
-         maxAge: 1000 * 60 * 60 * 24, // is in milliseconds.  expiring in 1 day
-      },
-      store: new MongoStore({
-         mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/moep",
-         ttl: 60 * 60 * 24, // is in seconds. expiring in 1 day
-      }),
-   })
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // is in milliseconds.  expiring in 1 day
+    },
+    store: new MongoStore({
+      mongoUrl: process.env.MONGODB_URI || "mongodb://localhost/moep",
+      ttl: 60 * 60 * 24, // is in seconds. expiring in 1 day
+    }),
+  })
 );
 
 // 👇 Start handling routes here
