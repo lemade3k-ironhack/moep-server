@@ -6,6 +6,7 @@ let Stage = require("../models/Stage.model");
 // Get upcoming shows
 router.get("/upcoming", (req, res) => {
   Concert.find()
+    .populate("stage")
     .then((concerts) => {
       sorted = concerts.sort((a, b) => {
         a.starttime > b.starttime ? 1 : b.starttime > a.starttime ? -1 : 0;
@@ -151,9 +152,9 @@ router.delete("/concerts/:concertId/delete", (req, res) => {
 });
 
 // Get concert details
-router.get("/concerts/:concertId", (req, res) => {
-  const { concertId } = req.params;
-  Concert.findById(concertId)
+router.get("/concerts/:bandname", (req, res) => {
+  const { bandname } = req.params;
+  Concert.findOne({bandname})
     .then((concert) => {
       res.status(200).json(concert);
     })
