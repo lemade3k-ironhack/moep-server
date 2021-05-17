@@ -150,13 +150,12 @@ router.delete("/concerts/:concertId/delete", (req, res) => {
     });
 });
 
-// Get concert details
-router.get("/concerts/:concertId", (req, res) => {
-  const { concertId } = req.params;
-  Concert.findById(concertId)
-    .then((concert) => {
-      res.status(200).json(concert);
-    })
+// Get concert details by concert title
+router.get("/concerts/:bandname", (req, res) => {
+  const { bandname } = req.params;
+
+  Concert.findOne({bandname})
+    .then((concert) => { res.status(200).json(concert) })
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Something went wrong. Please try again",
