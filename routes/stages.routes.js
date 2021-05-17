@@ -16,6 +16,7 @@ const isFilledIn = (req, res, next) => {
   }
 };
 
+// get all stages
 router.get("/stages", (req, res) => {
   Stage.find()
     .then((stages) => {
@@ -29,6 +30,7 @@ router.get("/stages", (req, res) => {
     });
 });
 
+// create a stage
 router.post("/stage/create", isFilledIn, (req, res) => {
   const { name } = req.body;
 
@@ -49,6 +51,7 @@ router.post("/stage/create", isFilledIn, (req, res) => {
     });
 });
 
+// update a stage name
 router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
   const stageId = req.params.stageId;
   const { name } = req.body;
@@ -70,6 +73,7 @@ router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
     });
 });
 
+// delete a stage
 router.delete("/stage/:stageId/delete", (req, res) => {
   Stage.findByIdAndDelete(req.params.stageId)
     .then((stage) => {
@@ -78,6 +82,23 @@ router.delete("/stage/:stageId/delete", (req, res) => {
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Couldn't delete stage! Please try again.",
+        message: err,
+      });
+    });
+});
+
+// get a stage with concerts (for admin)
+router.get("/stage/:stageName", (req, res) => {
+  const name = req.params.stageName
+
+  Stage.findOne({name})
+    .populate("concerts")
+    .then((stage) => {
+      res.status(200).json({id: stage._id, name: stage.name, concerts: stage.concerts});
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong! Please try again.",
         message: err,
       });
     });
