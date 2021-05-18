@@ -35,8 +35,30 @@ router.get("/user", isLoggedIn, (req, res, next) => {
     });
 });
 
+// Get upcoming favorites
+router.get("/upcoming/favorites", (req, res) => {
+  User.findById(req.session.loggedInUser._id)
+    .populate("concerts")
+    .then((user) => {
+      sorted = user.concerts.sort((a, b) => {
+        a.starttime > b.starttime ? 1 : b.starttime > a.starttime ? -1 : 0;
+      });
+      upcoming = sorted
+        .filter((concert) => concert.starttime > new Date())
+        .slice(0, 5);
+      console.log(upcoming);
+      res.status(200).json(upcoming);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong. Please try again",
+        message: err,
+      });
+    });
+});
+
 // Update users favorites
-router.post("/upcoming/update", isLoggedIn, (req, res) => {
+router.post("/upcoming/update", (req, res) => {
   const { favorites, concert } = req.body;
   let concerts = [];
 
