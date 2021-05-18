@@ -7,9 +7,7 @@ const isFilledIn = (req, res, next) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(500).json({
-      errorMessage: "Please enter all fields",
-    });
+    res.status(500).json({ errorMessage: "Please enter all fields" });
     return;
   } else {
     next();
@@ -19,9 +17,7 @@ const isFilledIn = (req, res, next) => {
 // get all stages
 router.get("/stages", (req, res) => {
   Stage.find()
-    .then((stages) => {
-      res.status(200).json(stages);
-    })
+    .then((stages) => res.status(200).json(stages))
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Something went wrong! Please try again.",
@@ -76,9 +72,7 @@ router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
 // delete a stage
 router.delete("/stage/:stageId/delete", (req, res) => {
   Stage.findByIdAndDelete(req.params.stageId)
-    .then((stage) => {
-      res.status(200).json(stage);
-    })
+    .then((stage) => res.status(200).json(stage))
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Couldn't delete stage! Please try again.",
@@ -89,13 +83,11 @@ router.delete("/stage/:stageId/delete", (req, res) => {
 
 // get a stage with concerts (for admin)
 router.get("/stage/:stageName", (req, res) => {
-  const name = req.params.stageName
+  const name = req.params.stageName;
 
-  Stage.findOne({name})
+  Stage.findOne({ name })
     .populate("concerts")
-    .then((stage) => {
-      res.status(200).json(stage);
-    })
+    .then((stage) => res.status(200).json(stage))
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Something went wrong! Please try again.",
