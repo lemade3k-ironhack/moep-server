@@ -155,6 +155,7 @@ router.delete("/concerts/:concertId/delete", (req, res) => {
 router.get("/concerts/:bandname", (req, res) => {
   const { bandname } = req.params;
   Concert.findOne({ bandname })
+    .populate("stage")
     .then((concert) => {
       res.status(200).json(concert);
     })
