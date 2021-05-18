@@ -94,7 +94,7 @@ router.get("/stage/:stageName", (req, res) => {
   Stage.findOne({name})
     .populate("concerts")
     .then((stage) => {
-      res.status(200).json({id: stage._id, name: stage.name, concerts: stage.concerts});
+      res.status(200).json(stage);
     })
     .catch((err) => {
       res.status(500).json({
