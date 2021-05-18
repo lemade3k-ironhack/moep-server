@@ -1,13 +1,34 @@
 const { Schema, model } = require("mongoose");
 
-// TODO: Please make sure you edit the user model to whatever makes sense in this case
-const userSchema = new Schema({
-  username: {
-    type: String,
-    // unique: true -> Ideally, should be unique, but its up to you
-  },
-  password: String,
-});
+const userSchema = new Schema(
+   {
+      name: {
+         type: String,
+         require: true,
+         unique: true,
+      },
+      password: {
+         type: String,
+         require: true,
+         minLength: 8,
+      },
+      role: {
+         type: String,
+         enum: ["admin", "user"],
+         default: "user",
+      },
+      // a users favorites
+      concerts: [
+         {
+            type: Schema.Types.ObjectId,
+            ref: "Concert",
+         },
+      ],
+   },
+   {
+      timestamps: true,
+   }
+);
 
 const User = model("User", userSchema);
 
