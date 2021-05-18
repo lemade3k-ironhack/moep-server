@@ -4,8 +4,9 @@ const newsSchema = new Schema(
   {
     message: {
       type: String,
-      unique: true,
-    }
+      required: true,
+    },
+    endtime: Date,
   },
   {
     timestamps: true,
