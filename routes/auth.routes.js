@@ -109,21 +109,4 @@ router.get("/logout", (req, res) => {
   res.status(204).json({});
 });
 
-const isLoggedIn = (req, res, next) => {
-  if (req.session.loggedInUser) {
-    next();
-  } else {
-    res.status(401).json({
-      message: "Unauthorized user",
-      code: 401,
-    });
-  }
-};
-
-// THIS IS A PROTECTED ROUTE
-// will handle all get requests to http:localhost:5005/api/user
-router.get("/user", isLoggedIn, (req, res, next) => {
-  res.status(200).json(req.session.loggedInUser);
-});
-
 module.exports = router;
