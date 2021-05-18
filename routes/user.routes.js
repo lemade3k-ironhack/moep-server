@@ -35,4 +35,33 @@ router.get("/user", isLoggedIn, (req, res, next) => {
     });
 });
 
+// Update users favorites
+router.post("/upcoming/update", isLoggedIn, (req, res) => {
+  const { favorites, concert } = req.body;
+  let concerts = [];
+
+  // check if concert is in favorites and build new concert array
+  if (favorites.some((favorite) => favorite._id == concert._id)) {
+    concerts = favorites.filter((favorite) => {
+      return favorite._id !== concert._id;
+    });
+  } else {
+    concerts = favorites.concat(concert);
+  }
+
+  User.findByIdAndUpdate(
+    req.session.loggedInUser._id,
+    { concerts },
+    { new: true }
+  )
+    .populate("concerts")
+    .then((user) => res.status(200).json(user.concerts))
+    .catch((err) => {
+      res.status(500).json({
+        errorMessage: "Something went wrong. Please try again",
+        message: err,
+      });
+    });
+});
+
 module.exports = router;
