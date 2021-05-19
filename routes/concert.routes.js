@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const isLoggedIn = require("../middlewares/currentUser");
 let Concert = require("../models/Concert.model");
 let Stage = require("../models/Stage.model");
 
 // Get upcoming shows
-router.get("/upcoming", (req, res) => {
+router.get("/upcoming", isLoggedIn, (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
@@ -25,7 +26,7 @@ router.get("/upcoming", (req, res) => {
 });
 
 // Get lineup (all concerts/bands)
-router.get("/concerts", (req, res) => {
+router.get("/concerts", isLoggedIn, (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
@@ -43,7 +44,7 @@ router.get("/concerts", (req, res) => {
 });
 
 // Get all concerts of one stage
-router.get("/stages/:stageId/concerts", (req, res) => {
+router.get("/stages/:stageId/concerts", isLoggedIn, (req, res) => {
   const { stageId } = req.params;
   Stage.findById(stageId)
     .populate("concerts")
@@ -73,7 +74,7 @@ const isFilledIn = (req, res, next) => {
 };
 
 // Create concert
-router.post("/stages/:stageId/concerts/create", isFilledIn, (req, res) => {
+router.post("/stages/:stageId/concerts/create", isLoggedIn, isFilledIn, (req, res) => {
   const { stageId } = req.params;
   const { bandname, starttime, endtime, description, image } = req.body;
   const img = image ? image : "/concertDummy.png";
@@ -108,7 +109,7 @@ router.post("/stages/:stageId/concerts/create", isFilledIn, (req, res) => {
 });
 
 // Update Concert
-router.patch("/concerts/:concertId/update", isFilledIn, (req, res) => {
+router.patch("/concerts/:concertId/update", isLoggedIn, isFilledIn, (req, res) => {
   const { concertId } = req.params;
   const { bandname, starttime, endtime, description, image } = req.body;
 
@@ -134,7 +135,7 @@ router.patch("/concerts/:concertId/update", isFilledIn, (req, res) => {
 });
 
 // Delete Concert
-router.delete("/concerts/:concertId/delete", (req, res) => {
+router.delete("/concerts/:concertId/delete", isLoggedIn, (req, res) => {
   const { concertId } = req.params;
 
   Concert.findByIdAndDelete(concertId)
@@ -152,7 +153,7 @@ router.delete("/concerts/:concertId/delete", (req, res) => {
 });
 
 // Get concert details
-router.get("/concerts/:bandname", (req, res) => {
+router.get("/concerts/:bandname", isLoggedIn, (req, res) => {
   const { bandname } = req.params;
   Concert.findOne({ bandname })
     .populate("stage")

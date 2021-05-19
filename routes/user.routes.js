@@ -1,17 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const isLoggedIn = require("../middlewares/currentUser");
 const User = require("../models/User.model");
-
-const isLoggedIn = (req, res, next) => {
-  if (req.session.loggedInUser) {
-    next();
-  } else {
-    res.status(401).json({
-      message: "Unauthorized user",
-      code: 401,
-    });
-  }
-};
 
 // Get user
 router.get("/user", isLoggedIn, (req, res, next) => {
@@ -36,7 +26,7 @@ router.get("/user", isLoggedIn, (req, res, next) => {
 });
 
 // Get upcoming favorites
-router.get("/upcoming/favorites", (req, res) => {
+router.get("/upcoming/favorites", isLoggedIn, (req, res) => {
   User.findById(req.session.loggedInUser._id)
     .populate("concerts")
     .then((user) => {
@@ -46,7 +36,6 @@ router.get("/upcoming/favorites", (req, res) => {
       upcoming = sorted
         .filter((concert) => concert.starttime > new Date())
         .slice(0, 5);
-      console.log(upcoming);
       res.status(200).json(upcoming);
     })
     .catch((err) => {
@@ -58,7 +47,7 @@ router.get("/upcoming/favorites", (req, res) => {
 });
 
 // Update users favorites
-router.post("/upcoming/update", (req, res) => {
+router.post("/upcoming/update", isLoggedIn, (req, res) => {
   const { favorites, concert } = req.body;
   let concerts = [];
 
