@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const isLoggedIn = require("../middlewares/currentUser");
 const User = require("../models/User.model");
+// authorize user middleware
+const { currentUser } = require("../middlewares/authorization");
 
 // Get user
-router.get("/user", isLoggedIn, (req, res, next) => {
+router.get("/user", currentUser, (req, res, next) => {
   User.findById(req.session.loggedInUser._id)
     .populate("concerts")
     .then((user) => {
@@ -26,7 +27,7 @@ router.get("/user", isLoggedIn, (req, res, next) => {
 });
 
 // Get upcoming favorites
-router.get("/upcoming/favorites", isLoggedIn, (req, res) => {
+router.get("/upcoming/favorites", currentUser, (req, res) => {
   User.findById(req.session.loggedInUser._id)
     .populate("concerts")
     .then((user) => {
@@ -47,7 +48,7 @@ router.get("/upcoming/favorites", isLoggedIn, (req, res) => {
 });
 
 // Update users favorites
-router.post("/upcoming/update", isLoggedIn, (req, res) => {
+router.post("/upcoming/update", currentUser, (req, res) => {
   const { favorites, concert } = req.body;
   let concerts = [];
 

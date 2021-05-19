@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const isLoggedIn = require("../middlewares/currentUser");
 const User = require("../models/User.model");
+// authorize user middleware
+const { currentUser } = require("../middlewares/authorization");
 
 router.post("/signup", (req, res) => {
   const { name, password, passwordConfirmation } = req.body;
@@ -104,7 +105,7 @@ router.post("/signin", (req, res) => {
 });
 
 // will handle all GET requests to http:localhost:5005/api/logout
-router.get("/logout", isLoggedIn, (req, res) => {
+router.get("/logout", currentUser, (req, res) => {
   req.session.destroy();
   // Nothing to send back to the user
   res.status(204).json({});
