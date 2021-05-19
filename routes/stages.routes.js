@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Stage = require("../models/Stage.model");
+const Concert = require("../models/Concert.model");
+
 // authorize user middleware
 const { currentUser, currentAdmin } = require("../middlewares/authorization");
 
@@ -74,7 +76,13 @@ router.patch("/stage/:stageId/update", currentAdmin, isFilledIn, (req, res) => {
 // delete a stage
 router.delete("/stage/:stageId/delete", currentAdmin, (req, res) => {
   Stage.findByIdAndDelete(req.params.stageId)
-    .then((stage) => res.status(200).json(stage))
+    .then((stage) => {
+      Concert.deleteMany({ stage: stage._id })
+        .then(() => console.log("Deleted dependencies"))
+        .catch((err) => console.log(err));
+
+      res.status(200).json(stage);
+    })
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Couldn't delete stage! Please try again.",
