@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const News = require("../models/News.model");
+// authorize user middleware
+const { currentUser, currentAdmin } = require("../middlewares/authorization");
 
 // get latest news
-router.get("/news", (req, res) => {
+router.get("/news", currentUser, (req, res) => {
   News.find()
     .then((news) => {
       const filtered = news.filter((msg) => msg.endtime > new Date());
@@ -36,7 +38,7 @@ const isFilledIn = (req, res, next) => {
 };
 
 // create new ticker message
-router.post("/news/create", isFilledIn, (req, res) => {
+router.post("/news/create", currentAdmin, isFilledIn, (req, res) => {
   const { message, duration } = req.body;
   const newDuration = duration ? duration : 60;
 
