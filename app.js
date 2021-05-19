@@ -45,6 +45,9 @@ app.use("/api/auth", authRoutes);
 const userRoutes = require("./routes/user.routes");
 app.use("/api", userRoutes);
 
+const newsRoutes = require("./routes/news.routes");
+app.use("/api", newsRoutes);
+
 const concertRoutes = require("./routes/concert.routes");
 app.use("/api", concertRoutes);
 
