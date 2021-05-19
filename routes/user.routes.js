@@ -3,19 +3,11 @@ const router = express.Router();
 const User = require("../models/User.model");
 const Stage = require("../models/Stage.model");
 
-const isLoggedIn = (req, res, next) => {
-  if (req.session.loggedInUser) {
-    next();
-  } else {
-    res.status(401).json({
-      message: "Unauthorized user",
-      code: 401,
-    });
-  }
-};
+// authorize user middleware
+const { currentUser } = require("../middlewares/authorization");
 
 // Get user
-router.get("/user", isLoggedIn, (req, res, next) => {
+router.get("/user", currentUser, (req, res, next) => {
   User.findById(req.session.loggedInUser._id)
     .populate("concerts")
     .then((user) => {
@@ -37,8 +29,7 @@ router.get("/user", isLoggedIn, (req, res, next) => {
 });
 
 // Get upcoming favorites
-// ToDo: refactor!!!
-router.get("/upcoming/favorites", (req, res) => {
+router.get("/upcoming/favorites", currentUser, (req, res) => {
   User.findById(req.session.loggedInUser._id)
     .populate("concerts")
     .then((user) => {
@@ -57,21 +48,20 @@ router.get("/upcoming/favorites", (req, res) => {
       const stageIds = upcoming.map((concert) => concert.stage);
 
       // find stage for every upcoming and merge result
-      Stage.find({ _id: { $in: stageIds } })
-        .then((stages) => {
-          let merged = [];
+      Stage.find({ _id: { $in: stageIds } }).then((stages) => {
+        let merged = [];
 
-          for (let i = 0; i < upcoming.length; i++) {
-            for (let j = 0; j < stages.length; j++) {
-              if (upcoming[i].stage.toString() == stages[j]._id.toString()) {
-                upcoming[i].stage = stages[j]
-                merged.push(upcoming[i]);
-              }
+        for (let i = 0; i < upcoming.length; i++) {
+          for (let j = 0; j < stages.length; j++) {
+            if (upcoming[i].stage.toString() == stages[j]._id.toString()) {
+              upcoming[i].stage = stages[j];
+              merged.push(upcoming[i]);
             }
           }
-          // finally give back the array with the upcomings and they stages
-          res.status(200).json(merged);
-        })
+        }
+        // finally give back the array with the upcomings and they stages
+        res.status(200).json(merged);
+      });
     })
     .catch((err) => {
       res.status(500).json({
@@ -82,7 +72,7 @@ router.get("/upcoming/favorites", (req, res) => {
 });
 
 // Update users favorites
-router.post("/upcoming/update", (req, res) => {
+router.post("/upcoming/update", currentUser, (req, res) => {
   const { favorites, concert } = req.body;
   let concerts = [];
 

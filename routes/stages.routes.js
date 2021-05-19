@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Stage = require("../models/Stage.model");
+const Concert = require("../models/Concert.model");
+
+// authorize user middleware
+const { currentUser, currentAdmin } = require("../middlewares/authorization");
 
 // custom middleware to validate user input
 const isFilledIn = (req, res, next) => {
@@ -15,7 +19,7 @@ const isFilledIn = (req, res, next) => {
 };
 
 // get all stages
-router.get("/stages", (req, res) => {
+router.get("/stages", currentUser, (req, res) => {
   Stage.find()
     .then((stages) => res.status(200).json(stages))
     .catch((err) => {
@@ -27,7 +31,7 @@ router.get("/stages", (req, res) => {
 });
 
 // create a stage
-router.post("/stage/create", isFilledIn, (req, res) => {
+router.post("/stage/create", currentAdmin, isFilledIn, (req, res) => {
   const { name } = req.body;
 
   Stage.create({ name })
@@ -48,7 +52,7 @@ router.post("/stage/create", isFilledIn, (req, res) => {
 });
 
 // update a stage name
-router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
+router.patch("/stage/:stageId/update", currentAdmin, isFilledIn, (req, res) => {
   const stageId = req.params.stageId;
   const { name } = req.body;
 
@@ -70,9 +74,15 @@ router.patch("/stage/:stageId/update", isFilledIn, (req, res) => {
 });
 
 // delete a stage
-router.delete("/stage/:stageId/delete", (req, res) => {
+router.delete("/stage/:stageId/delete", currentAdmin, (req, res) => {
   Stage.findByIdAndDelete(req.params.stageId)
-    .then((stage) => res.status(200).json(stage))
+    .then((stage) => {
+      Concert.deleteMany({ stage: stage._id })
+        .then(() => console.log("Deleted dependencies"))
+        .catch((err) => console.log(err));
+
+      res.status(200).json(stage);
+    })
     .catch((err) => {
       res.status(500).json({
         errorMessage: "Couldn't delete stage! Please try again.",
@@ -81,8 +91,8 @@ router.delete("/stage/:stageId/delete", (req, res) => {
     });
 });
 
-// get a stage with concerts (for admin)
-router.get("/stage/:stageName", (req, res) => {
+// get a stage with concerts
+router.get("/stage/:stageName", currentUser, (req, res) => {
   const name = req.params.stageName;
 
   Stage.findOne({ name })
