@@ -31,10 +31,10 @@ router.get("/concerts", (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
-      sorted = concerts.sort((a, b) => {
-        a.bandname > b.bandname ? 1 : b.bandname > a.bandname ? -1 : 0;
-      });
-      res.status(200).json(sorted);
+      concerts.sort((a, b) =>
+        a.bandname.localeCompare(b.bandname, undefined, { sensitivity: "base" })
+      );
+      res.status(200).json(concerts);
     })
     .catch((err) => {
       res.status(500).json({
@@ -59,65 +59,75 @@ const isFilledIn = (req, res, next) => {
 };
 
 // Create concert
-router.post("/stages/:stageId/concerts/create", currentAdmin, isFilledIn, (req, res) => {
-  const { stageId } = req.params;
-  const { bandname, starttime, endtime, description, image } = req.body;
-  const img = image ? image : "/concertDummy.png";
-  const newConcert = {
-    bandname,
-    starttime,
-    endtime,
-    description,
-    image: img,
-    stage: stageId,
-  };
+router.post(
+  "/stages/:stageId/concerts/create",
+  currentAdmin,
+  isFilledIn,
+  (req, res) => {
+    const { stageId } = req.params;
+    const { bandname, starttime, endtime, description, image } = req.body;
+    const img = image ? image : "/concertDummy.png";
+    const newConcert = {
+      bandname,
+      starttime,
+      endtime,
+      description,
+      image: img,
+      stage: stageId,
+    };
 
-  Concert.create(newConcert)
-    .then((concert) => {
-      Stage.findByIdAndUpdate(stageId, {
-        $push: { concerts: concert._id },
-      }).then(() => res.status(202).json(concert));
-    })
-    .catch((err) => {
-      if (err.code === 11000) {
-        res.status(500).json({
-          errorMessage: "Band name already taken",
-          message: err,
-        });
-      } else {
-        res.status(500).json({
-          errorMessage: "Couldn't create concert! Please try again.",
-          message: err,
-        });
-      }
-    });
-});
+    Concert.create(newConcert)
+      .then((concert) => {
+        Stage.findByIdAndUpdate(stageId, {
+          $push: { concerts: concert._id },
+        }).then(() => res.status(202).json(concert));
+      })
+      .catch((err) => {
+        if (err.code === 11000) {
+          res.status(500).json({
+            errorMessage: "Band name already taken",
+            message: err,
+          });
+        } else {
+          res.status(500).json({
+            errorMessage: "Couldn't create concert! Please try again.",
+            message: err,
+          });
+        }
+      });
+  }
+);
 
 // Update Concert
-router.patch("/concerts/:concertId/update", currentAdmin, isFilledIn, (req, res) => {
-  const { concertId } = req.params;
-  const { bandname, starttime, endtime, description, image } = req.body;
+router.patch(
+  "/concerts/:concertId/update",
+  currentAdmin,
+  isFilledIn,
+  (req, res) => {
+    const { concertId } = req.params;
+    const { bandname, starttime, endtime, description, image } = req.body;
 
-  Concert.findByIdAndUpdate(
-    concertId,
-    { bandname, starttime, endtime, description, image },
-    { new: true }
-  )
-    .then((concert) => res.status(200).json(concert))
-    .catch((err) => {
-      if (err.code === 11000) {
-        res.status(500).json({
-          errorMessage: "New bandname already taken",
-          message: err,
-        });
-      } else {
-        res.status(500).json({
-          errorMessage: "Couldn't update concert! Please try again.",
-          message: err,
-        });
-      }
-    });
-});
+    Concert.findByIdAndUpdate(
+      concertId,
+      { bandname, starttime, endtime, description, image },
+      { new: true }
+    )
+      .then((concert) => res.status(200).json(concert))
+      .catch((err) => {
+        if (err.code === 11000) {
+          res.status(500).json({
+            errorMessage: "New bandname already taken",
+            message: err,
+          });
+        } else {
+          res.status(500).json({
+            errorMessage: "Couldn't update concert! Please try again.",
+            message: err,
+          });
+        }
+      });
+  }
+);
 
 // Delete Concert
 router.delete("/concerts/:concertId/delete", currentAdmin, (req, res) => {
