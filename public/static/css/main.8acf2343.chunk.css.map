@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/components/users/calendar/Calendar.css"],"names":[],"mappings":"AAAA,UACE,WAAY,CACZ,WAAY,CACZ,gBACF","file":"main.8acf2343.chunk.css","sourcesContent":[".calendar {\n  padding: 8px;\n  margin: auto;\n  max-width: 1200px;\n}"]}
