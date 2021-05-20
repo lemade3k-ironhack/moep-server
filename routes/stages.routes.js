@@ -4,7 +4,7 @@ const Stage = require("../models/Stage.model");
 const Concert = require("../models/Concert.model");
 
 // authorize user middleware
-const { currentUser, currentAdmin } = require("../middlewares/authorization");
+const { currentAdmin } = require("../middlewares/authorization");
 
 // custom middleware to validate user input
 const isFilledIn = (req, res, next) => {
@@ -19,7 +19,7 @@ const isFilledIn = (req, res, next) => {
 };
 
 // get all stages
-router.get("/stages", currentUser, (req, res) => {
+router.get("/stages", (req, res) => {
   Stage.find()
     .then((stages) => res.status(200).json(stages))
     .catch((err) => {
@@ -92,7 +92,7 @@ router.delete("/stage/:stageId/delete", currentAdmin, (req, res) => {
 });
 
 // get a stage with concerts
-router.get("/stage/:stageName", currentUser, (req, res) => {
+router.get("/stage/:stageName", (req, res) => {
   const name = req.params.stageName;
 
   Stage.findOne({ name })
