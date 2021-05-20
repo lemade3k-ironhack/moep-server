@@ -3,10 +3,10 @@ const router = express.Router();
 let Concert = require("../models/Concert.model");
 let Stage = require("../models/Stage.model");
 // authorize user middleware
-const { currentUser, currentAdmin } = require("../middlewares/authorization");
+const { currentAdmin } = require("../middlewares/authorization");
 
 // Get upcoming shows
-router.get("/upcoming", currentUser, (req, res) => {
+router.get("/upcoming", (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
@@ -27,7 +27,7 @@ router.get("/upcoming", currentUser, (req, res) => {
 });
 
 // Get lineup (all concerts/bands)
-router.get("/concerts", currentUser, (req, res) => {
+router.get("/concerts", (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
@@ -138,7 +138,7 @@ router.delete("/concerts/:concertId/delete", currentAdmin, (req, res) => {
 });
 
 // Get concert details
-router.get("/concerts/:bandname", currentUser, (req, res) => {
+router.get("/concerts/:bandname", (req, res) => {
   const { bandname } = req.params;
   Concert.findOne({ bandname })
     .populate("stage")
