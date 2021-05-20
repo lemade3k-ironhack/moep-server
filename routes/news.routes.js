@@ -5,7 +5,7 @@ const News = require("../models/News.model");
 const { currentUser, currentAdmin } = require("../middlewares/authorization");
 
 // get latest news
-router.get("/news", currentUser, (req, res) => {
+router.get("/news", (req, res) => {
   News.find()
     .then((news) => {
       const filtered = news.filter((msg) => msg.endtime > new Date());
