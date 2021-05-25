@@ -12,10 +12,9 @@ const userSchema = new Schema(
          require: true,
          minLength: 8,
       },
-      role: {
-         type: String,
-         enum: ["admin", "user"],
-         default: "user",
+      admin: {
+         type: Boolean,
+         default: false,
       },
       // a users favorites
       concerts: [

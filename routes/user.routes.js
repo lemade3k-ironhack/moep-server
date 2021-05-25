@@ -14,7 +14,7 @@ router.get("/user", currentUser, (req, res, next) => {
       const filtered = {
         id: user.id,
         name: user.name,
-        role: user.role,
+        admin: user.admin,
         concerts: user.concerts,
       };
 

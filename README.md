@@ -47,7 +47,7 @@ User model
 username - String // required & unique
 email - String // required & unique
 password - String // required
-role - String // enum['admin', 'user'], default: 'user'
+role - Boolean // default: false
 concerts - [Ref ObjectID<Concert>]
 timestamps
 ```
