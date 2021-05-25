@@ -10,10 +10,10 @@ router.get("/upcoming", (req, res) => {
   Concert.find()
     .populate("stage")
     .then((concerts) => {
-      sorted = concerts.sort((a, b) => {
+      const sorted = concerts.sort((a, b) => {
         a.starttime > b.starttime ? 1 : b.starttime > a.starttime ? -1 : 0;
       });
-      upcoming = sorted
+      const upcoming = sorted
         .filter((concert) => concert.starttime > new Date())
         .slice(0, 5);
       res.status(200).json(upcoming);

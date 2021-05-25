@@ -13,7 +13,7 @@ const currentUser = (req, res, next) => {
 const currentAdmin = (req, res, next) => {
   const currentUser = req.session.loggedInUser;
   
-  if (currentUser && currentUser.role === "admin") {
+  if (currentUser && currentUser.admin) {
     next();
   } else {
     res.status(401).json({
